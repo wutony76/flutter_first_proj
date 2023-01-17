@@ -4,9 +4,16 @@
 import 'dart:html';
 
 import 'package:english_words/english_words.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:test2/core/manager.dart';
+import 'package:test2/ui/actions/controller.dart';
+import 'package:test2/ui/view/testDataAdd.dart';
 import 'dart:developer' as dev;
 import 'dart:math';
+
+import 'core/static.dart';
+import 'ui/view/testDataList.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,15 +41,39 @@ class TestSample extends StatelessWidget {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  sum(n) {
+    var sum = 0;
+    for (var i = 1; i <= n; i++) {
+      sum += i;
+    }
+    return sum;
+  }
+
   @override
   Widget build(BuildContext context) {
     String testTitle = 'Startup Name Generator';
+
+    var getMgr = Manager.getInst();
+    dev.log('ttttt get data ====== $getMgr');
+    Manager.getInst()?.setContext(context);
+    BuildContext? context2 = Manager.getInst()?.mainContext;
+    dev.log('ttttt get data2 ====== $context2');
+
+    // test ------------------------------------------------
+    dev.log('ttttt print ====== 1');
+    compute(sum, 1000).then((res) {
+      dev.log('ttttt calc sum ====== $res');
+    });
+    dev.log('ttttt print ====== 2');
+
     return MaterialApp(
         routes: {
           //Map<String, WidgetBuilder>
           // "/splash": (context) => new SplashPage(),
           // "/login": (context) => new LoginPage(),
-          "/home": (context) => new RandomWords(),
+          R.home: (context) => new RandomWords(),
+          R.data: (context) => new DataView(),
+          R.add: (context) => new AddView(),
           // "/detail": (context) => new DetailPage(),
         },
         title: testTitle,
@@ -82,6 +113,9 @@ class RandomWordsState extends State<RandomWords> {
   // final _biggerFont = const TextStyle(fontSize: 16);
   @override
   Widget build(BuildContext context) {
+    var isCheck = Manager.getInst()?.mainContext == context;
+    dev.log('isCheck ====== $isCheck');
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Startup Name Generator'),
@@ -101,7 +135,9 @@ class RandomWordsState extends State<RandomWords> {
           IconButton(onPressed: _pushSaved, icon: const Icon(Icons.list)),
           IconButton(
             icon: Icon(Icons.add_circle),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed("/data");
+            },
           ),
           IconButton(
             icon: Icon(Icons.more_vert),
@@ -319,12 +355,7 @@ class NewPage extends StatelessWidget {
           ]),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             ElevatedButton(
-              onPressed: () {
-                String pageName = '/home';
-                Navigator.of(context).pushNamed("/home");
-                // Navigator.of(context).popUntil((route) => route.isFirst);
-                // Navigator.pop(context); // 回到上一頁
-              },
+              onPressed: Pressed.gohome(context),
               child: const Text('Go back!'),
             ),
           ]),
