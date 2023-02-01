@@ -13,6 +13,6 @@ class _AddViewState extends State<AddView> {
   Widget build(BuildContext context) {
     // TODO: implement build
     // return Text('can start add. data.');
-    return new BaseScaffold().defaultScaffold('Test add data.');
+    return new BaseScaffold(context).defaultScaffold('Test add data.');
   }
 }

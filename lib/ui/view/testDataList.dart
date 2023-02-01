@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 
 import '../../core/conn.dart';
@@ -56,6 +57,8 @@ class _DataViewState extends State<DataView> {
     ConnServ()
         .get(url: 'https://jsonplaceholder.typicode.com/posts')
         .then((res) {
+      if (res == null) return;
+
       // res data type dynamic.
       for (var item in res) {
         listData.add(DataInfo(
@@ -64,6 +67,16 @@ class _DataViewState extends State<DataView> {
           title: item['title'],
           body: item['body'],
         ));
+      }
+
+      // get post add data.
+      String key = "post_dataAdd";
+      var getData = Cache.getData(key);
+      dev.log('>>> $getData', name: 'Cache');
+      if (getData != null) {
+        for (var item in getData.values) {
+          listData.add(item);
+        }
       }
 
       setState(() {
@@ -78,7 +91,7 @@ class _DataViewState extends State<DataView> {
 
     final Iterable<ListTile> _tiles = listData.map((DataInfo item) {
       String defaultData = '';
-      return new ListTile(
+      return ListTile(
         title: Text(item.title ?? defaultData),
         subtitle: Text(item.body ?? defaultData),
         dense: true,
@@ -112,12 +125,23 @@ class _DataViewState extends State<DataView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Test show api data.'),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () => Pressed.goPath(_thisContext, R.home),
+        ),
       ),
-      body: new ListView(children: divided),
+      body: ListView(children: divided),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => Pressed.goPath(_thisContext, R.add),
       ),
     );
+  }
+
+  pressedEdit() {
+    print('pressedEdit');
   }
 }

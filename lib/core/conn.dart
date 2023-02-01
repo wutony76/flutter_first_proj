@@ -41,26 +41,31 @@ class ConnServ {
   post({String? pramas, String url = '', Function? callback}) async {
     dev.log('>>> $url', name: 'HTTP POST. req');
 
-    Uri uri = Uri.parse(url);
-    var headers = {
-      'content-type': 'application/json',
-      'Authorization': Member.token,
-    };
-    var res = await _client.post(
-      uri,
-      headers: headers,
-      body: pramas,
-    );
-    int code = res.statusCode;
-    dev.log('>>>  $code, ', name: 'HTTP POST. res');
-    if (!successCode.contains(code)) {
-      httpErrors(res);
-      return null;
+    try {
+      Uri uri = Uri.parse(url);
+      var headers = {
+        'content-type': 'application/json',
+        'Authorization': Member.token,
+      };
+      var res = await _client.post(
+        uri,
+        headers: headers,
+        body: pramas,
+      );
+      int code = res.statusCode;
+      dev.log('>>>  $code, ', name: 'HTTP POST. res');
+      if (!successCode.contains(code)) {
+        httpErrors(res);
+        return null;
+      }
+      String data = res.body;
+      var jsonData = jsonDecode(data);
+      if (callback != null) callback();
+      return jsonData;
+    } catch (err) {
+      // log('Add error, ', error: err);
+      dev.log('>>> ', error: err, name: 'HTTP POST. errs');
+      throw Exception(err);
     }
-
-    String data = res.body;
-    var jsonData = jsonDecode(data);
-    if (callback != null) callback();
-    return jsonData;
   }
 }

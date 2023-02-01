@@ -4,6 +4,31 @@ class Member {
   static String token = '';
 }
 
+class Cache {
+  static Map<String, dynamic> storgeData = new Map<String, dynamic>();
+  static Map setData(String key, dynamic data) {
+    if (storgeData.containsKey(key)) {
+      try {
+        // data type map.
+        storgeData[key].update(data);
+      } catch (e) {
+        storgeData[key] = data;
+      }
+    } else {
+      storgeData[key] = data;
+    }
+    return storgeData[key];
+  }
+
+  static Map? getData(String key) {
+    if (storgeData.containsKey(key)) {
+      return storgeData[key];
+    } else {
+      return null;
+    }
+  }
+}
+
 /**
  *  set app routes.
  */
