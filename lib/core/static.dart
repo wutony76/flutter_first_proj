@@ -33,9 +33,12 @@ class Cache {
  *  set app routes.
  */
 class R {
+  static const root = "/";
+  static const login = "/login";
   static const home = "/home";
   static const data = "/data";
   static const add = "/add";
+  static const game = "/game";
   // static const edit = "/edit";
   // static const add = "/delete";
 }

@@ -44,7 +44,8 @@ class ConnServ {
     try {
       Uri uri = Uri.parse(url);
       var headers = {
-        'content-type': 'application/json',
+        // 'content-type': 'application/json',
+        'content-type': 'application/json; charset=UTF-8',
         'Authorization': Member.token,
       };
       var res = await _client.post(
