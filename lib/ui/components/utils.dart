@@ -47,18 +47,18 @@ class ChangeLoginPage extends StatelessWidget {
   }
 }
 
-void goNewPageHasView(BuildContext _context, views) {
+void goNewPageHasView(BuildContext outContext, views) {
   // Navigator.pop(_context); // 關閉 drawer
-  Navigator.of(_context).push(
+  Navigator.of(outContext).push(
     MaterialPageRoute(builder: (context) => views),
   );
 }
 
-InkResponse closeBtn(BuildContext _context, [Function? actions]) {
+InkResponse closeBtn(BuildContext context, [Function? actions]) {
   return InkResponse(
     onTap: () {
       if (actions == null) {
-        Navigator.of(_context).pop();
+        Navigator.of(context).pop();
       } else {
         actions();
       }
@@ -72,28 +72,28 @@ InkResponse closeBtn(BuildContext _context, [Function? actions]) {
 
 /** set public bar btn */
 IconButton dataBtn() {
-  BuildContext? _context = Manager.getInst()?.mainContext;
+  BuildContext? context = Manager.getInst()?.mainContext;
   return IconButton(
-    icon: Icon(Icons.data_usage),
+    icon: const Icon(Icons.data_usage),
     onPressed: () {
-      Pressed.goPath(_context, R.data);
+      Pressed.goPath(context, R.data);
     },
   );
 }
 
 IconButton logoutBtn() {
   // BuildContext? _context = Manager.getInst()?.mainContext;
-  BuildContext? _context = Manager.getInst()!.returnContext();
+  BuildContext? context = Manager.getInst()!.returnContext();
   BaseDialog? dialog = Manager.getInst()!.returnDialog();
 
   return IconButton(
-    icon: Icon(Icons.data_usage),
+    icon: const Icon(Icons.data_usage),
     onPressed: () {
       if (dialog != null) dialog.close();
       dialog!.confirmBox(W.strLogout, () {
         Member.token = '';
-        Future.delayed(Duration(milliseconds: 1000)).then((value) {
-          if (_context != null) Pressed.goPath(_context, R.login);
+        Future.delayed(const Duration(milliseconds: 1000)).then((value) {
+          if (context != null) Pressed.goPath(context, R.login);
         });
       });
     },
@@ -101,11 +101,21 @@ IconButton logoutBtn() {
 }
 
 IconButton gameBtn() {
-  BuildContext? _context = Manager.getInst()?.mainContext;
+  BuildContext? context = Manager.getInst()?.mainContext;
   return IconButton(
-    icon: Icon(Icons.games),
+    icon: const Icon(Icons.games),
     onPressed: () {
-      Pressed.goPath(_context, R.game);
+      Pressed.goPath(context, R.game);
+    },
+  );
+}
+
+IconButton painterBtn() {
+  BuildContext? context = Manager.getInst()?.mainContext;
+  return IconButton(
+    icon: const Icon(Icons.format_paint),
+    onPressed: () {
+      Pressed.goPath(context, R.painter);
     },
   );
 }

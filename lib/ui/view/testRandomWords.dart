@@ -25,9 +25,11 @@ class RandomWordsState extends State<RandomWords> {
   Widget build(BuildContext context) {
     Manager.getInst()?.setContext(context);
 
+    // 設定上方功能紐
     List<Widget> btnArr = [
       IconButton(onPressed: _pushSaved, icon: const Icon(Icons.favorite)),
       dataBtn(),
+      painterBtn(),
       gameBtn(),
       logoutBtn(),
     ];

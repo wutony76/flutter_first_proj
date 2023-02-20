@@ -12,6 +12,7 @@ import 'testDraggableCard.dart';
 import 'testEntrance.dart';
 import 'testGame.dart';
 import 'testLogin.dart';
+import 'testPainter.dart';
 import 'testRandomWords.dart';
 
 class TestApp extends StatelessWidget {
@@ -73,7 +74,9 @@ class TestApp extends StatelessWidget {
           case R.add:
             return pageRouteBuilder(settings, const AddView());
           case R.game:
-            return pageRouteBuilder(settings, Game());
+            return pageRouteBuilder(settings, const Game());
+          case R.painter:
+            return pageRouteBuilder(settings, const PainterPage());
         }
         // Unknown route
         return MaterialPageRoute(builder: (context) => Entrance());

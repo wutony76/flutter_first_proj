@@ -10,6 +10,7 @@ import 'dart:developer' as dev;
 import 'dart:ui' as ui;
 
 import '../components/baseScaffold.dart';
+import '../components/images/ImageLoaderClass.dart';
 
 class ImagePage extends StatefulWidget {
   const ImagePage({super.key});
@@ -63,10 +64,11 @@ class _ImagePageState extends State<ImagePage> {
             // )
             child: FutureBuilder<ui.Image>(
               // future: loadImageByFile("images/Q_SPAWN.jpg"), // get img method01
-              future: loadImageByFile("images/Q_SPAWN.jpg"), // get img method02
+              future: ImageLoaderClass.loader.loadImageByProvider(
+                  const AssetImage("images/Q_SPAWN.jpg")), // get img method02
               builder: (context, snapshot) {
                 var show = snapshot;
-                print('ttttt FutureBuilder snapshot >>> $show');
+                print('[Image] -FutureBuilder snapshot status >>> $show');
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Text("Waiting...");
                 }
