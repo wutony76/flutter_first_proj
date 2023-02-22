@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:test2/ui/actions/controller.dart';
 
+import '../../core/static.dart';
 import '../components/baseScaffold.dart';
 import '../components/utils.dart';
+import 'testCustomAddBar.dart';
 import 'testDraggableCard.dart';
 import 'testUiImage.dart';
 
@@ -31,7 +34,10 @@ Drawer leftMenu(BuildContext _context) {
         ListTile(
           leading: Icon(Icons.settings),
           title: Text('Settings'),
-          onTap: () => goNewPage(_context, 'Settings'),
+          onTap: () => {
+            // goNewPage(_context, 'Settings')
+            Pressed.goPath(_context, R.setting)
+          },
         ),
         ListTile(
           leading: Icon(Icons.animation),

@@ -16,9 +16,9 @@ class BaseScaffold {
   BuildContext viewContext;
   BaseScaffold(this.viewContext);
 
-  Scaffold defaultScaffold(
+  Widget defaultScaffold(
     String? title,
-    Scaffold? _scaffold,
+    Widget? _scaffold,
   ) {
     if (_scaffold != null) return _scaffold;
     title ??= "DefaultScaffold title";

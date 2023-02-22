@@ -120,6 +120,16 @@ IconButton painterBtn() {
   );
 }
 
+IconButton zoomBtn() {
+  BuildContext? context = Manager.getInst()?.mainContext;
+  return IconButton(
+    icon: const Icon(Icons.zoom_in_sharp),
+    onPressed: () {
+      Pressed.goPath(context, R.zoom);
+    },
+  );
+}
+
 checkHasToken(BuildContext _context) {
   if (Member.token != '') {
     Future.delayed(const Duration(milliseconds: 1))

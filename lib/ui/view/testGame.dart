@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:test2/core/manager.dart';
 import 'dart:developer' as dev;
 import 'dart:ui' as ui;
+import 'package:image/image.dart' as IMG;
 
 import 'package:test2/ui/actions/controller.dart';
 import 'package:test2/ui/view/testUiImage.dart';
@@ -26,6 +27,7 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> with SingleTickerProviderStateMixin {
+  BuildContext? mainContext;
   late AnimationController _controller;
   late Animation<Alignment> _animation;
   Alignment _dragAlignment = Alignment.center;
@@ -116,14 +118,43 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
       });
     });
 
+    // if (mainContext != null) return;
+    // var size = MediaQuery.of(mainContext!).size;
+
     ImageLoaderClass.loader
         .loadImageByProvider(const AssetImage("images/Q_SPAWN.jpg"))
+        // ImageLoaderClass.loader
+        //     .resizeLoad(
+        //   const AssetImage("images/Q_SPAWN.jpg"),
+        //   ui.window.physicalSize.width.floor(),
+        //   ui.window.physicalSize.width.floor(),
+        // )
         .then((res) {
       print('ttt.initState Q_SPAWN ImageLoaderClass >> $res');
 
       baseImage = res;
-      init(baseImage.width.toDouble(), baseImage.height.toDouble());
+      // baseImage = ImageLoaderClass.loader.resize();
+      // if (mainContext != null) {
+      //   var size = MediaQuery.of(mainContext!).size;
+      //   print('ttttt.get windows >>> $size');
 
+      //   if (size.width < baseImage.width.toDouble()) {
+      //     ImageLoaderClass.loader
+      //         .resize(res, size.width.floor(), size.width.floor())
+      //         .then((res2) {
+      //       baseImage = res2;
+      //       print('ttttt.get baseImage222 >>> $baseImage');
+      //       init(size.width.toDouble(), size.width.toDouble());
+      //       setState(() {});
+      //     });
+      //   } else {
+      //     init(baseImage.width.toDouble(), baseImage.height.toDouble());
+      //   }
+      // } else {
+      //   init(baseImage.width.toDouble(), baseImage.height.toDouble());
+      // }
+
+      init(baseImage.width.toDouble(), baseImage.height.toDouble());
       setState(() {});
     });
 
@@ -143,6 +174,8 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     Manager.getInst()?.setContext(context);
     var size = MediaQuery.of(context).size;
+    mainContext = context;
+
     Offset startPoint = Offset(-1, -1);
     Offset endPoint = Offset(-1, -1);
 

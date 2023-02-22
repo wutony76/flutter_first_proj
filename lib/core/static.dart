@@ -1,7 +1,11 @@
-// ignore: slash_for_doc_comments
+import 'dart:ui' as ui;
 
 class Member {
   static String token = '';
+}
+
+class GameInfo {
+  static ui.Image? baseIMG;
 }
 
 class Cache {
@@ -34,11 +38,13 @@ class Cache {
  */
 class R {
   static const root = "/";
+  static const setting = "/setting";
   static const login = "/login";
   static const home = "/home";
   static const data = "/data";
   static const add = "/add";
   static const game = "/game";
+  static const zoom = "/zoom";
   static const painter = "/painter";
   // static const edit = "/edit";
   // static const add = "/delete";

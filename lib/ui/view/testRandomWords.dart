@@ -31,6 +31,7 @@ class RandomWordsState extends State<RandomWords> {
       dataBtn(),
       painterBtn(),
       gameBtn(),
+      zoomBtn(),
       logoutBtn(),
     ];
 

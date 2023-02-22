@@ -7,6 +7,7 @@ import 'dart:developer' as dev;
 
 import '../../core/static.dart';
 import '../../core/word.dart';
+import 'testBottomNavBar.dart';
 import 'testDataList.dart';
 import 'testDraggableCard.dart';
 import 'testEntrance.dart';
@@ -14,6 +15,7 @@ import 'testGame.dart';
 import 'testLogin.dart';
 import 'testPainter.dart';
 import 'testRandomWords.dart';
+import 'testZoom.dart';
 
 class TestApp extends StatelessWidget {
   const TestApp({super.key});
@@ -65,6 +67,8 @@ class TestApp extends StatelessWidget {
         switch (settings.name) {
           case R.root:
             return pageRouteBuilder(settings, Entrance());
+          case R.setting:
+            return pageRouteBuilder(settings, BottomNav());
           case R.login:
             return pageRouteBuilder(settings, LoginView());
           case R.home:
@@ -75,6 +79,8 @@ class TestApp extends StatelessWidget {
             return pageRouteBuilder(settings, const AddView());
           case R.game:
             return pageRouteBuilder(settings, const Game());
+          case R.zoom:
+            return pageRouteBuilder(settings, const Zoom());
           case R.painter:
             return pageRouteBuilder(settings, const PainterPage());
         }
