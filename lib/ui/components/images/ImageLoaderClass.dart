@@ -53,15 +53,25 @@ class ImageLoaderClass {
       completer.complete(GameInfo.baseIMG);
     }
     return completer.future;
+  }
 
-    // ImageStreamListener listener =
-    //     ImageStreamListener((ImageInfo frame, bool sync) {
-    //   //监听
-    //   final ui.Image image = frame.image;
-    //   completer.complete(image); //完成
-    //   stream.removeListener(listener); //移除监听
-    // });
-    // stream.addListener(listener); //添加监听
+  Future<Uint8List> loadImageByProviderToUint8List(
+    ImageProvider provider, {
+    ImageConfiguration config = ImageConfiguration.empty,
+  }) async {
+    Completer<Uint8List> completer = Completer<Uint8List>();
+    ImageStream stream = provider.resolve(config); //获取图片流
+    listener(ImageInfo frame, bool synchronousCall) async {
+      final ui.Image image = frame.image;
+      var data = await image.toByteData();
+      Uint8List bytes = data!.buffer.asUint8List();
+      print('test.get.loadImageByProviderToByteData >>> $data');
+      completer.complete(bytes);
+      stream.removeListener(ImageStreamListener(listener));
+    }
+
+    stream.addListener(ImageStreamListener(listener));
+    return completer.future;
   }
 
   ///缩放加载[provider],缩放比例[scale]
@@ -90,5 +100,24 @@ class ImageLoaderClass {
         Rect.fromLTWH(0, 0, dstWidth.toDouble(), dstHeight.toDouble()),
         paint);
     return recorder.endRecording().toImage(dstWidth, dstHeight); //返回图片
+  }
+
+  // image uint8 2 img 互轉
+  //Future<ui.Image> uint8List2Image
+
+  // image to uint8list -
+  Future<ByteData?> image2ByteData(ui.Image image) async {
+    return await image.toByteData();
+  }
+
+  Future<Uint8List?> image2Uint8List(ui.Image image) async {
+    print('ttt.image2Uint8List image >>> $image');
+    ByteData? byteData = await image!.toByteData(); // web 不能用
+    print('ttt.image2Uint8List byteData >>> $byteData');
+    if (byteData != null) {
+      Uint8List bytes = byteData.buffer.asUint8List();
+      return bytes;
+    }
+    return null;
   }
 }

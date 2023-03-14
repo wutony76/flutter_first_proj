@@ -44,6 +44,7 @@ class R {
   static const data = "/data";
   static const add = "/add";
   static const game = "/game";
+  static const gameOOXX = "/OOXX";
   static const zoom = "/zoom";
   static const painter = "/painter";
   // static const edit = "/edit";

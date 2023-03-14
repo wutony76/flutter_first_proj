@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:test2/core/manager.dart';
 import 'package:test2/ui/actions/controller.dart';
 import 'package:test2/ui/view/testDataAdd.dart';
+import 'package:test2/ui/view/testGameOOXX.dart';
 import 'dart:developer' as dev;
 
 import '../../core/static.dart';
@@ -83,10 +84,13 @@ class TestApp extends StatelessWidget {
             return pageRouteBuilder(settings, const Zoom());
           case R.painter:
             return pageRouteBuilder(settings, const PainterPage());
+          case R.gameOOXX:
+            return pageRouteBuilder(settings, const GameOOXXView());
         }
         // Unknown route
         return MaterialPageRoute(builder: (context) => Entrance());
       },
+      debugShowCheckedModeBanner: false,
     );
   }
 

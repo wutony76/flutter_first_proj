@@ -87,7 +87,7 @@ IconButton logoutBtn() {
   BaseDialog? dialog = Manager.getInst()!.returnDialog();
 
   return IconButton(
-    icon: const Icon(Icons.data_usage),
+    icon: const Icon(Icons.exit_to_app),
     onPressed: () {
       if (dialog != null) dialog.close();
       dialog!.confirmBox(W.strLogout, () {
@@ -106,6 +106,16 @@ IconButton gameBtn() {
     icon: const Icon(Icons.games),
     onPressed: () {
       Pressed.goPath(context, R.game);
+    },
+  );
+}
+
+IconButton gameOOXXBtn() {
+  BuildContext? context = Manager.getInst()?.mainContext;
+  return IconButton(
+    icon: const Icon(Icons.circle_outlined),
+    onPressed: () {
+      Pressed.goPath(context, R.gameOOXX);
     },
   );
 }

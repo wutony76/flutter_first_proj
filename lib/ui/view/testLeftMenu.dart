@@ -6,6 +6,7 @@ import '../components/baseScaffold.dart';
 import '../components/utils.dart';
 import 'testCustomAddBar.dart';
 import 'testDraggableCard.dart';
+import 'testImageGenerator.dart';
 import 'testUiImage.dart';
 
 Drawer leftMenu(BuildContext _context) {
@@ -62,6 +63,17 @@ Drawer leftMenu(BuildContext _context) {
             goNewPageHasView(
               _context,
               ImagePage(),
+            );
+            // DraggableCard();
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.image_sharp),
+          title: const Text('Test ImageGenerator'),
+          onTap: () {
+            goNewPageHasView(
+              _context,
+              ImageGenerator(),
             );
             // DraggableCard();
           },
