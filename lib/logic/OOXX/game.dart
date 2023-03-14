@@ -39,6 +39,7 @@ class GameOOXX {
   List<Map> canSelect = [];
   int step = 0;
   bool canClick = true;
+  bool gameEnd = false;
   late Ai npc;
   dynamic mainUi;
 
@@ -72,6 +73,7 @@ class GameOOXX {
             if (playType == Player.user) {
               canClick = false; // change ai play.
               Future.delayed(Duration(milliseconds: 1000)).then((value) {
+                if (gameEnd) return;
                 npc.play();
                 canClick = true;
                 print(
@@ -158,6 +160,12 @@ class GameOOXX {
         }
       }
     });
+    if (status == -1) {
+      if ({...analyzeArr}.length == 9) {
+        canClick = false;
+        status = 2;
+      }
+    }
     return status;
   }
 
@@ -168,6 +176,7 @@ class GameOOXX {
     print('_calcPlayingEnd isType >>> $isType');
     if (isType != null && isType != -1) {
       drawResult(canvas, isType);
+      gameEnd = true;
     }
   }
 
@@ -205,22 +214,22 @@ class GameOOXX {
       int index = item['index'];
 
       // draw data index .....
-      TextPainter textPainter = TextPainter(
-        text: TextSpan(
-          text: index.toString(),
-          style: TextStyle(
-            color: Colors.red,
-            fontSize: 30,
-          ),
-        ),
-        textDirection: TextDirection.ltr,
-      );
-      textPainter.layout(
-        minWidth: 0,
-        maxWidth: gameWidth / 3,
-      );
-      Offset offset = Offset(sp.dx + 1, sp.dy + 1);
-      textPainter.paint(canvas, offset);
+      // TextPainter textPainter = TextPainter(
+      //   text: TextSpan(
+      //     text: index.toString(),
+      //     style: TextStyle(
+      //       color: Colors.red,
+      //       fontSize: 30,
+      //     ),
+      //   ),
+      //   textDirection: TextDirection.ltr,
+      // );
+      // textPainter.layout(
+      //   minWidth: 0,
+      //   maxWidth: gameWidth / 3,
+      // );
+      // Offset offset = Offset(sp.dx + 1, sp.dy + 1);
+      // textPainter.paint(canvas, offset);
 
       // draw data .....
       if (item['isHasValue']) {

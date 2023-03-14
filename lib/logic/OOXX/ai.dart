@@ -8,6 +8,7 @@ import 'tool.dart';
 class Ai {
   GameOOXX game;
   List<dynamic>? canSelectArr;
+  List dataRecord = [];
   Ai({required this.game}) {
     init();
   }
@@ -53,16 +54,37 @@ class Ai {
         }
         break;
       case 3:
+      case 5:
+      case 7:
         // step3.
         analyzeData = Tool.getAnalyzeCanSelectSet(game.canSelect);
         isSelectArr = analyzeData[Player.circle]; // 取畫圈位置
         checkPosSelectArr = Tool.getCanSelectSet(game.canSelect).keys.toList();
-        print('ttttt.isSelectArr >>> $isSelectArr');
 
         Set? arr = Tool.getAnalyzeSelectTwoNum(isSelectArr);
-        print('get arr >>> $arr');
+        Set? selfArr = Tool.getAnalyzeSelectTwoNum(analyzeData[Player.fork]);
 
-        // 對手已兩連線
+        print('get arr >>> $arr');
+        // 自己已兩格
+        if (selfArr != null) {
+          for (var group in DataInfo.winGroup) {
+            print(' print  -- $group');
+            for (var enemy in selfArr) {
+              Set isHasSet = group.intersection(enemy);
+              if (isHasSet.toList().length == 2) {
+                Set data = group.difference(enemy);
+                if (!checkPosSelectArr.contains(data.first)) {
+                  aiSelect = data.first;
+                  print('get data >>> $data - $aiSelect');
+                  break;
+                }
+                print('test break 1.');
+              }
+            }
+          }
+        }
+
+        // 對手已兩格
         if (arr != null) {
           for (var group in DataInfo.winGroup) {
             if (aiSelect != -1) break;
@@ -89,24 +111,27 @@ class Ai {
          *  對手未兩連線，換己方攻擊
          *  var _set = {...list};   List 轉 Set
          *  */
-        playArr = [
-          {0, 4, 8},
-          {2, 4, 6}
-        ];
-        for (var group in playArr) {
-          if (aiSelect != -1) break;
-          if (group.intersection({...checkPosSelectArr}).toList().length == 3) {
-            defaultSelectArr = [1, 3, 5, 7];
-            while (true) {
-              int index = Random().nextInt(defaultSelectArr.length);
-              aiSelect = defaultSelectArr[index];
-              if (aiSelect != -1) {
-                break;
+        if (game.step == 3) {
+          playArr = [
+            {0, 4, 8},
+            {2, 4, 6}
+          ];
+          for (var group in playArr) {
+            if (aiSelect != -1) break;
+            if (group.intersection({...checkPosSelectArr}).toList().length ==
+                3) {
+              defaultSelectArr = [1, 3, 5, 7];
+              while (true) {
+                int index = Random().nextInt(defaultSelectArr.length);
+                aiSelect = defaultSelectArr[index];
+                if (aiSelect != -1) {
+                  break;
+                }
               }
             }
           }
+          if (aiSelect != -1) break;
         }
-        if (aiSelect != -1) break;
 
         /**
          *  simulation run test.
@@ -114,14 +139,8 @@ class Ai {
          */
         aiSelect = simulationAIplay(analyzeData, checkPosSelectArr);
         break;
-
-      case 5:
-      case 7:
-        analyzeData = Tool.getAnalyzeCanSelectSet(game.canSelect);
-        checkPosSelectArr = Tool.getCanSelectSet(game.canSelect).keys.toList();
-        aiSelect = simulationAIplay(analyzeData, checkPosSelectArr);
-        break;
     }
+    // print('dataRecord >>> $dataRecord');
 
     // 最外層UI重畫
     if (aiSelect != -1) {
@@ -173,10 +192,9 @@ class Ai {
     print('simulationAIplay analyzeData >>> $analyzeData');
     print('simulationAIplay checkPosSelectArr >>> $checkPosSelectArr');
     int deDefaultSelect = -1;
-    Set spaceArr = DataInfo.allSlice.difference({...checkPosSelectArr});
     List circleArr = List.from(analyzeData[Player.circle]); // list 深拷貝
     List forkArr = List.from(analyzeData[Player.fork]);
-    deDefaultSelect = subRunTest(circleArr, forkArr, spaceArr, Player.fork, 1);
+    deDefaultSelect = subRunTest(circleArr, forkArr, null, Player.fork, 1);
     if (deDefaultSelect != -1) return deDefaultSelect;
   }
 
@@ -193,6 +211,7 @@ class Ai {
     List forkArrSub = List.from(forkArr);
     Set nowSelectArr = {...circleArrSub}.union({...forkArrSub}); // OX已選擇
     Set spaceArr = DataInfo.allSlice.difference(nowSelectArr); // 可選位置
+    if (spaceArr2 != null) spaceArr = spaceArr2; // test calc...
     Map simulationRes = {}; // 記錄權重值
     int step; // 步數
     int deDefaultSelect = -1;
@@ -205,7 +224,7 @@ class Ai {
     print('$LogLV spaceArr >>> ${spaceArr.toList()}');
 
     // 可選位置逐一選擇
-    spaceArr.toList().forEach((slice) {
+    spaceArr.forEach((slice) {
       // slice select loop init ...
       step = 0;
       simulationRes[slice] = 0;
@@ -235,11 +254,12 @@ class Ai {
           case 'circle': // circle
             print('圈圈走');
             circleArrSub =
-                updatePlaying(circleArrSub, forkArrSub, Player.circle);
+                updatePlaying(circleArrSub, forkArrSub, Player.circle, LogLV);
             break;
           case 'fork': // fork
             print('叉叉走');
-            forkArrSub = updatePlaying(circleArrSub, forkArrSub, Player.fork);
+            forkArrSub =
+                updatePlaying(circleArrSub, forkArrSub, Player.fork, LogLV);
             break;
         }
         step++;
@@ -249,19 +269,29 @@ class Ai {
 
         // 判斷輸贏.增加權重
         List args1 = type == Player.circle ? circleArrSub : forkArrSub;
+        List args2 = type != Player.circle ? circleArrSub : forkArrSub;
         DataInfo.winGroup.forEach((group) {
           if (group
                   .intersection({...circleArrSub}.union({...forkArrSub}))
                   .toList()
                   .length ==
               3) {
-            // 符合判斷
+            // 符合判斷 (自己)
             if (group.intersection({...args1}).toList().length == 3) {
               int value = simulationRes[slice];
-              value++; // 權重 +1
+              value += 5; // 權重 +5
+              // print('simulationRes win1 >>> $group');
               simulationRes[slice] = value;
               isLoopWin = true;
-              // print('simulation win group >>> $group');
+            }
+
+            // 符合判斷 (對手)
+            if (group.intersection({...args2}).toList().length == 3) {
+              int value = simulationRes[slice];
+              value -= 3; // 權重 -3
+              // print('simulationRes win2 >>> $group');
+              simulationRes[slice] = value;
+              isLoopWin = true;
             }
           }
         });
@@ -269,6 +299,10 @@ class Ai {
         // 離開迴圈條件...
         if ((circleArrSub.length + forkArrSub.length) == 9 || isLoopWin) break;
       }
+
+      print('$LogLV subRunTest... spaceArr >>>  $spaceArr');
+      print('$LogLV subRunTest... simulationRes >>>  $simulationRes');
+      print('$LogLV >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     });
 
     // 取權重最高值
@@ -288,6 +322,7 @@ class Ai {
       deDefaultSelect = scoreArr[Random().nextInt(scoreArr.length)];
     }
     print('$LogLV subRunTest... deDefaultSelect >>>  $deDefaultSelect');
+    dataRecord.add({LogLV, simulationRes, deDefaultSelect});
     return deDefaultSelect;
   }
 
@@ -296,7 +331,7 @@ class Ai {
     return calc == type ? 'circle' : 'fork';
   }
 
-  List updatePlaying(circleArr, forkArr, type) {
+  List updatePlaying(circleArr, forkArr, type, LogLV) {
     int defaultSelect = -1;
     Map analyzeData2Data = {
       Player.circle: circleArr,
@@ -332,9 +367,9 @@ class Ai {
     if (defaultSelect == -1) {
       Set nowSelectArr =
           {...List.from(circleArr)}.union({...List.from(forkArr)}); // OX已選擇
-      Set spaceArr2 = DataInfo.allSlice.difference(nowSelectArr); // 可選位置
+      // Set spaceArr2 = DataInfo.allSlice.difference(nowSelectArr); // 可選位置
       int args3 = type == Player.circle ? Player.circle : Player.fork;
-      defaultSelect = subRunTest(circleArr, forkArr, spaceArr2, args3, 10);
+      defaultSelect = subRunTest(circleArr, forkArr, null, args3, LogLV + 10);
       print('deDefaultSelect5 >>> $defaultSelect');
     }
 
@@ -348,23 +383,4 @@ class Ai {
     }
     return type == Player.circle ? circleArr : forkArr;
   }
-
-  // winGroup.forEach((item) {
-  //     Set isHasSet = item.intersection(analyzeArr);
-  //     if (isHasSet.toList().length == 3) {
-  //       // 符合判斷
-  //       List isHasArr = isHasSet.toList();
-  //       var grid1 = canSelect[isHasArr[0]];
-  //       var grid2 = canSelect[isHasArr[1]];
-  //       var grid3 = canSelect[isHasArr[2]];
-
-  //       if (grid1["value"] == grid2["value"] &&
-  //           grid1["value"] == grid3["value"]) {
-  //         status = grid1["value"];
-  //         canClick = false;
-  //         // ignore: void_checks
-  //         return grid1["value"];
-  //       }
-  //     }
-  //   });
 }

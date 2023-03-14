@@ -43,6 +43,9 @@ class _GameOOXXState extends State<GameOOXXView> {
                 Canvas canvas = Canvas(recorder,
                     Rect.fromPoints(Offset(0, 0), Offset(gameSize, gameSize)));
 
+                viewRefresh();
+                return;
+
                 // draw checkerBoard .....
                 canvas.drawRect(Rect.fromLTWH(0, 0, gameSize, gameSize),
                     Paint()..color = Color.fromARGB(255, 230, 154, 15));
@@ -117,14 +120,17 @@ class _GameOOXXState extends State<GameOOXXView> {
           GestureDetector(
             onPanDown: (details) {
               print('onPanDown');
+              if (game!.gameEnd) return;
               clickPoint = details.localPosition;
             },
             onPanUpdate: (details) {
               print('onPanUpdate');
+              if (game!.gameEnd) return;
               clickPoint = details.localPosition;
             },
             onPanEnd: (details) {
               print('onPanEnd $clickPoint');
+              if (game!.gameEnd) return;
               game!.setSelect(clickPoint!);
               viewRefresh();
             },
