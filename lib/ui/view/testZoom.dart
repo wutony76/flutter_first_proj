@@ -89,55 +89,112 @@ class _ZoomState extends State<Zoom> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ui.Image>(
-        future: ImageLoaderClass.loader
-            .loadImageByProvider(const AssetImage("images/Q_SPAWN.jpg")),
-        builder: (context, snapshot) {
-          return GestureDetector(
-            onPanDown: (e) {
-              print('ttttt.ZOOM.onPanDown');
-              Offset startPoint = e.localPosition;
-              double distance = sqrt(pow(startPoint.dx - zoomCenter.dx, 2) +
-                  pow(startPoint.dy - zoomCenter.dy, 2));
+    return Container(
+      color: Color.fromARGB(255, 49, 49, 49),
+      child: FutureBuilder<ui.Image>(
+          future: ImageLoaderClass.loader
+              .loadImageByProvider(const AssetImage("images/Q_SPAWN.jpg")),
+          builder: (context, snapshot) {
+            return GestureDetector(
+              onPanDown: (e) {
+                print('ttttt.ZOOM.onPanDown');
+                Offset startPoint = e.localPosition;
+                double distance = sqrt(pow(startPoint.dx - zoomCenter.dx, 2) +
+                    pow(startPoint.dy - zoomCenter.dy, 2));
 
-              if (distance <= zoomRadius) {
-                isMove = true;
-                isZoom = true;
-              }
-              setState(() {});
-            },
-            onPanUpdate: (e) {
-              print('ttttt.ZOOM.onPanUpdate');
-              if (isMove) {
-                zoomCenter = e.localPosition;
+                if (distance <= zoomRadius) {
+                  isMove = true;
+                  isZoom = true;
+                }
                 setState(() {});
-              }
-            },
-            onPanEnd: (e) {
-              print('ttttt.ZOOM.onPanEnd');
-              isMove = false;
-              isZoom = false;
-              setState(() {});
-            },
-            child: CustomPaint(
-              painter: ImageZoomClass(
-                snapshot.data,
-                zoomCenter,
-                isZoom,
+              },
+              onPanUpdate: (e) {
+                print('ttttt.ZOOM.onPanUpdate');
+                if (isMove) {
+                  zoomCenter = e.localPosition;
+                  setState(() {});
+                }
+              },
+              onPanEnd: (e) {
+                print('ttttt.ZOOM.onPanEnd');
+                isMove = false;
+                isZoom = false;
+                setState(() {});
+              },
+              child: CustomPaint(
+                painter: ImageZoomClass(
+                  snapshot.data,
+                  zoomCenter,
+                  isZoom,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      child: Text('Back'),
+                      onPressed: () {
+                        Pressed.goPath(context, R.home);
+                      },
+                    ),
+                  ],
+                ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    child: Text('Back'),
-                    onPressed: () {
-                      Pressed.goPath(context, R.home);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
+            );
+          }),
+    );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return FutureBuilder<ui.Image>(
+  //       future: ImageLoaderClass.loader
+  //           .loadImageByProvider(const AssetImage("images/Q_SPAWN.jpg")),
+  //       builder: (context, snapshot) {
+  //         return GestureDetector(
+  //           onPanDown: (e) {
+  //             print('ttttt.ZOOM.onPanDown');
+  //             Offset startPoint = e.localPosition;
+  //             double distance = sqrt(pow(startPoint.dx - zoomCenter.dx, 2) +
+  //                 pow(startPoint.dy - zoomCenter.dy, 2));
+
+  //             if (distance <= zoomRadius) {
+  //               isMove = true;
+  //               isZoom = true;
+  //             }
+  //             setState(() {});
+  //           },
+  //           onPanUpdate: (e) {
+  //             print('ttttt.ZOOM.onPanUpdate');
+  //             if (isMove) {
+  //               zoomCenter = e.localPosition;
+  //               setState(() {});
+  //             }
+  //           },
+  //           onPanEnd: (e) {
+  //             print('ttttt.ZOOM.onPanEnd');
+  //             isMove = false;
+  //             isZoom = false;
+  //             setState(() {});
+  //           },
+  //           child: CustomPaint(
+  //             painter: ImageZoomClass(
+  //               snapshot.data,
+  //               zoomCenter,
+  //               isZoom,
+  //             ),
+  //             child: Column(
+  //               mainAxisAlignment: MainAxisAlignment.end,
+  //               children: [
+  //                 ElevatedButton(
+  //                   child: Text('Back'),
+  //                   onPressed: () {
+  //                     Pressed.goPath(context, R.home);
+  //                   },
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       });
+  // }
 }

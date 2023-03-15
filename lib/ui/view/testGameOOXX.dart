@@ -7,6 +7,7 @@ import 'package:test2/ui/actions/controller.dart';
 
 import '../../core/static.dart';
 import '../../logic/OOXX/game.dart';
+import '../components/baseScaffold.dart';
 
 class GameOOXXView extends StatefulWidget {
   const GameOOXXView({super.key});
@@ -26,11 +27,15 @@ class _GameOOXXState extends State<GameOOXXView> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Container(
+      color: Color.fromARGB(255, 49, 49, 49),
       child: Column(
         children: [
+          BaseScaffold(context).defalutBar('PLAY OX GAME '),
           Padding(
-            padding: EdgeInsets.all(12.0),
+            padding: EdgeInsets.fromLTRB(12.0, 100.0, 12.0, 12.0),
+            // padding: EdgeInsets.all(12.0),
+
             child: ElevatedButton(
               child: Text('START GAME!'),
               onPressed: (() async {
